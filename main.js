@@ -1,8 +1,9 @@
+// INITALIZE THE GAME BOARD ON PAGE LOAD
 initCatRow();
 initBoard();
 
 document.querySelector('button').addEventListener('click', buildCategories);
-
+// CREATE CATEGORY ROW
 function initCatRow() {
   let catRow = document.getElementById('category-row');
 
@@ -12,7 +13,7 @@ function initCatRow() {
     catRow.appendChild(box);
   }
 }
-
+// CREATE CLUE BOARD
 function initBoard() {
   let board = document.getElementById('clue-board');
 
@@ -35,10 +36,12 @@ function initBoard() {
     board.appendChild(row);
   }
 }
-
+//CALL API
 function randInt() {
   return Math.floor(Math.random() * 18418 + 1);
 }
+
+let catArray = [];
 
 function buildCategories() {
   const fetchReq1 = fetch(
@@ -77,13 +80,13 @@ function buildCategories() {
   allData.then((res) => {
     console.log(res);
     catArray = res;
-    setCategory(catArray);
+    setCategories(catArray);
   });
 }
 
 // LOAD CATEGORIES TO THE BOARD
 
-function setCategory() {
+function setCategories(catArray) {
   let element = document.getElementById('category-row');
   let children = element.children;
   for (let i = 0; i < children.length; i++) {
@@ -91,9 +94,13 @@ function setCategory() {
   }
 }
 
+//FIGURE OUT WHICH ITEM WAS CLICKED
+
 function getClue(event) {
   let child = event.currentTarget;
+  console.log(child);
   child.classList.add('clicked-box');
+
   let boxValue = child.innerHTML.slice(1);
   let parent = child.parentNode;
   let index = Array.prototype.findIndex.call(
@@ -104,5 +111,15 @@ function getClue(event) {
   let clue = cluesList.find((obj) => {
     return obj.value == boxValue;
   });
-  showQuestion(clue, child, boxValue);
+  console.log(clue);
+
+  function showQuestion(clue, child, boxValue) {
+    console.log('filler');
+  }
 }
+
+// SHOW QUESTION TO USER AND GET THEIR ANSWER! (PROMPT)
+
+// EVALUATE ANSWER AND SHOW TO USER TO CONFIRM
+
+// AWARD POINTS
