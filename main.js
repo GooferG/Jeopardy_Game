@@ -98,9 +98,7 @@ function setCategories(catArray) {
 
 function getClue(event) {
   let child = event.currentTarget;
-  console.log(child);
   child.classList.add('clicked-box');
-
   let boxValue = child.innerHTML.slice(1);
   let parent = child.parentNode;
   let index = Array.prototype.findIndex.call(
@@ -112,14 +110,39 @@ function getClue(event) {
     return obj.value == boxValue;
   });
   console.log(clue);
-
-  function showQuestion(clue, child, boxValue) {
-    console.log('filler');
-  }
+  showQuestion(clue, child, boxValue);
 }
 
 // SHOW QUESTION TO USER AND GET THEIR ANSWER! (PROMPT)
 
+function showQuestion(clue, target, boxValue) {
+  let userAnswer = prompt(clue.question).toLowerCase();
+  let correctAnswer = clue.answer.toLowerCase().replace(/<\/?[^>]+(>|$)/g, '');
+  let possiblePoints = +boxValue;
+  target.innerHTML = clue.answer;
+  target.removeEventListener('click', getClue, false);
+  evaluateAnswer(userAnswer, correctAnswer, possiblePoints);
+}
+
 // EVALUATE ANSWER AND SHOW TO USER TO CONFIRM
+function evaluateAnswer(userAnswer, correctAnswer, possiblePoints) {
+  let checkAnswer = userAnswer == correctAnswer ? 'correct' : 'incorrect';
+  let confirmAnswer = confirm(
+    `For $${possiblePoints}, you answered "${userAnswer}", and the correct answer was "${correctAnswer}". Your answer appears to be ${checkAnswer}. Click OK to accept or click Cancel if the answer was not properly evaluated.`
+  );
+  awardPoints(checkAnswer, confirmAnswer, possiblePoints);
+}
 
 // AWARD POINTS
+
+function awardPoints(checkAnswer, confirmAnswer, possiblePoints) {
+  if (!(checkAnswer == 'incorrect' && confirmAnswer == true)) {
+    // award points
+    let target = document.getElementById('score');
+    let currentScore = +target.innerText;
+    currentScore += possiblePoints;
+    target.innerText = currentScore;
+  } else {
+    alert('No points awarded.');
+  }
+}
